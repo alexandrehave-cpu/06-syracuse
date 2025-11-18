@@ -1,94 +1,122 @@
-#### Fonctions secondaires
+"""
+Module permettant de générer la suite de Syracuse d'une valeur initiale,
+d'en extraire différentes grandeurs caractéristiques, et de produire un
+graphique via Plotly.
 
+Fonctions implémentées :
+- syracuse_l(n) : génère la suite de Syracuse sous forme de liste
+- temps_de_vol(l) : retourne le temps de vol
+- temps_de_vol_en_altitude(l) : retourne le temps de vol en altitude
+- altitude_maximale(l) : retourne l'altitude maximale atteinte
+"""
 
-# imports
 from plotly.graph_objects import Scatter, Figure
+
 
 ### NE PAS MODIFIER ###
 def syr_plot(lsyr):
+    """Affiche la suite de Syracuse sous forme graphique (NE PAS MODIFIER)."""
     title = "Syracuse" + " (n = " + str(lsyr[0]) + " )"
-    fig = Figure({  'layout':   { 'title': {'text': title},
-                                'xaxis': {'title': {'text':"x"}},
-                                'yaxis': {'title': {'text':"y"}},
-                                }
-                }
+    fig = Figure(
+        {
+            "layout": {
+                "title": {"text": title},
+                "xaxis": {"title": {"text": "x"}},
+                "yaxis": {"title": {"text": "y"}},
+            }
+        }
     )
 
-    x = [ i for i in range(len(lsyr)) ]
-    t = Scatter(x=x, y=lsyr, mode="lines+markers", marker_color = "blue")
-    fig.add_trace(t)
+    x = list(range(len(lsyr)))
+    trace = Scatter(
+        x=x, y=lsyr, mode="lines+markers", marker_color="blue"
+    )
+    fig.add_trace(trace)
     fig.show()
-    # fig.write_html('fig.html', include_plotlyjs='cdn')
-    return None
 #######################
 
+
 def syracuse_l(n):
-    """retourne la suite de Syracuse de source n
+    """
+    Retourne la suite de Syracuse sous forme de liste.
 
     Args:
-        n (int): la source de la suite
+        n (int): valeur initiale de la suite
 
     Returns:
-        list: la suite de Syracuse de source n
+        list: liste des valeurs de la suite jusqu'à 1
     """
+    suite = [n]
+    while suite[-1] != 1:
+        u = suite[-1]
+        if u % 2 == 0:
+            suite.append(u // 2)
+        else:
+            suite.append(3 * u + 1)
+    return suite
 
-    # votre code ici 
-    l = [ ]
-    return l
 
-def temps_de_vol(l):
-    """Retourne le temps de vol d'une suite de Syracuse
+def temps_de_vol(liste):
+    """
+    Retourne le temps de vol d'une suite de Syracuse.
 
     Args:
-        l (list): la suite de Syracuse
+        liste (list): suite de Syracuse
 
     Returns:
-        int: le temps de vol
+        int: temps de vol (longueur - 1)
     """
-    
-    # votre code ici
+    if not liste:
+        return 0
 
-    n = 0
-    return n
+    return len(liste) - 1
 
-def temps_de_vol_en_altitude(l):
-    """Retourne le temps de vol en altitude d'une suite de Syracuse
+
+def temps_de_vol_en_altitude(liste):
+    """
+    Retourne le temps de vol en altitude d'une suite de Syracuse.
+
+    Le calcul s'arrête dès que la suite descend sous la valeur initiale.
 
     Args:
-        l (list): la suite de Syracuse
+        liste (list): suite de Syracuse
 
     Returns:
-        int: le temps de vol en altitude
+        int: temps passé strictement au-dessus du niveau initial
     """
+    if not liste:
+        return 0
 
-    # votre code ici
+    n0 = liste[0]
+    count = 0
 
-    n = 0
-    return n
+    for u in liste[1:]:
+        if u < n0:
+            break
+        if u > n0:
+            count += 1
+
+    return count
 
 
-def altitude_maximale(l):
-    """retourne l'altitude maximale d'une suite de Syracuse
+def altitude_maximale(liste):
+    """
+    Retourne l'altitude maximale atteinte dans la suite de Syracuse.
 
     Args:
-        l (list): la suite de Syracuse
+        liste (list): suite de Syracuse
 
     Returns:
-        int: l'altitude maximale
+        int: valeur maximale atteinte
     """
-    
-    # votre code ici
-    
-    n = 0
-    return n
+    if not liste:
+        return 0
 
-
-#### Fonction principale
+    return max(liste)
 
 
 def main():
-
-    # vos appels à la fonction secondaire ici
+    """Fonction principale de démonstration des fonctions secondaires."""
     lsyr = syracuse_l(15)
     syr_plot(lsyr)
     print(temps_de_vol(lsyr))
